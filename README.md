@@ -3,27 +3,29 @@
 Expose MQTT topics to an OPCUA server via folders. Supports read/write. 
 
 Usage:
-
 - git clone https://github.com/nzfarmer1/mqtt2opcua
 - cd mqtt2opcua
 - npm link (view/edit examples/run.js)
 - node examples/run.js
 
-node creates an OPC server that:
+######
+Changes in this fork, nzfarmer --> ElectronHacks.
+-nzfarmer1 (Andrew McClure, the author) helped make a change so that all MQTT/OPC item names are cashed in "cache.json. This improves functionality for some OPC servers. Now when mqtt2opcua restarts the items will be there and avaliable for the opc server to stop lots of bad quality errors.
+-Added authentication.
+###### 
 
+node creates an OPC server that:
 1. Connects to an MQTT broker
 2. Subscribes to '#' or a predefined set of topics
 3. On 1st Message of an unseen topic it creates the folder paths and node (last part of path) with nodeId  s=topic
 4. On all onMessage calls, it keeps track of the topic's payload
 5. On Set requests it publishes the raw value from the OPCUA client
 6. On Get requests it returns the formatted persistant payload
-
-PLEASE REMEMBER TO CHECK FOR UPDATES REGULARLY!
+7. To get mqtt2opcua to cache MQTT/OPC items simply do a Ctrl+C in the mqtt2opcua terminal window, this controlled shutdown will save all the current items to the cache, if the cache does not exist it creates a new one. 
+8. User and password is handled in the mqtt2opcua/examples/run.js file in the Options section. See the example below.
 
 
 <img src="mqtt2opcua.png"/>
-
-Todo: Add authentication
 
 For configuration options and formatting of payloads, see handlers example below.
 
@@ -54,15 +56,19 @@ backward.on("$SYS/broker/bytes/#", function(variant) {
 });
 
 options = {
+    cache:"/Users/John/Documents/node/mqtt2opcua/cache.json", //Modify this to a valid path where the cache will be created
+    opcName:"MQTT Local",
     opcHost:"localhost",
-    opcPort:"4334",
+    opcPort:"4335",
     mqttHost:"localhost",
     mqttPort:"1883",
-    debug:true,
-    roundtrip:false,    // Set to true if you wish to enforce the integrity of round trip communications	
+    username:"user",
+    password:"secureP@ssword",		
+    debug:false,
+    roundtrip:false,	// set to true to limit updates to onMessage (i.e. validate an accuator is set)
     forward:forward,	// data converter - mqtt -> opcua
     backward:backward,	// data converter - opcua -> mqtt
-    //topics:['#','$SYS/#'] // Customize to override. These are the default so uncessary.
+    //topics:['#','$SYS/broker/#'] // Customize to override. These are the default so uncessary.
 };
 
 var server = new mqtt2opc(options);
