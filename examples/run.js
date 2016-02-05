@@ -23,12 +23,15 @@ backward.on("$SYS/broker/bytes/#", function(variant) {
 });
 
 options = {
+    cache:"/Users/John/Documents/node/mqtt2opcua/cache.json",
     opcName:"MQTT Local",
     opcHost:"localhost",
     opcPort:"4335",
     mqttHost:"localhost",
     mqttPort:"1883",
-    debug:true,
+    username:"user",
+    password:"secureP@ssword",		
+    debug:false,
     roundtrip:false,	// set to true to limit updates to onMessage (i.e. validate an accuator is set)
     forward:forward,	// data converter - mqtt -> opcua
     backward:backward,	// data converter - opcua -> mqtt
@@ -36,5 +39,3 @@ options = {
 };
 
 var server = new mqtt2opc(options);
-
-
