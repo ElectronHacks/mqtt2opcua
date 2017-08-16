@@ -3,9 +3,9 @@
 Expose MQTT topics to an OPCUA server via folders. Supports read/write. 
 
 Usage:
-- git clone https://github.com/nzfarmer1/mqtt2opcua
+- git clone https://github.com/electronhacks/mqtt2opcua
 - cd mqtt2opcua
-- npm link (view/edit examples/run.js)
+- npm link
 - node examples/run.js
 
 ######
